@@ -10,33 +10,60 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DineRouteRouteImport } from './routes/dine/route'
+import { Route as DineIndexRouteImport } from './routes/dine/index'
+import { Route as DineMenuIndexRouteImport } from './routes/dine/menu/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DineRouteRoute = DineRouteRouteImport.update({
+  id: '/dine',
+  path: '/dine',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DineIndexRoute = DineIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DineRouteRoute,
+} as any)
+const DineMenuIndexRoute = DineMenuIndexRouteImport.update({
+  id: '/menu/',
+  path: '/menu/',
+  getParentRoute: () => DineRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dine': typeof DineRouteRouteWithChildren
+  '/dine/': typeof DineIndexRoute
+  '/dine/menu/': typeof DineMenuIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dine': typeof DineIndexRoute
+  '/dine/menu': typeof DineMenuIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dine': typeof DineRouteRouteWithChildren
+  '/dine/': typeof DineIndexRoute
+  '/dine/menu/': typeof DineMenuIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/dine' | '/dine/' | '/dine/menu/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/dine' | '/dine/menu'
+  id: '__root__' | '/' | '/dine' | '/dine/' | '/dine/menu/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DineRouteRoute: typeof DineRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +75,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dine': {
+      id: '/dine'
+      path: '/dine'
+      fullPath: '/dine'
+      preLoaderRoute: typeof DineRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dine/': {
+      id: '/dine/'
+      path: '/'
+      fullPath: '/dine/'
+      preLoaderRoute: typeof DineIndexRouteImport
+      parentRoute: typeof DineRouteRoute
+    }
+    '/dine/menu/': {
+      id: '/dine/menu/'
+      path: '/menu'
+      fullPath: '/dine/menu/'
+      preLoaderRoute: typeof DineMenuIndexRouteImport
+      parentRoute: typeof DineRouteRoute
+    }
   }
 }
 
+interface DineRouteRouteChildren {
+  DineIndexRoute: typeof DineIndexRoute
+  DineMenuIndexRoute: typeof DineMenuIndexRoute
+}
+
+const DineRouteRouteChildren: DineRouteRouteChildren = {
+  DineIndexRoute: DineIndexRoute,
+  DineMenuIndexRoute: DineMenuIndexRoute,
+}
+
+const DineRouteRouteWithChildren = DineRouteRoute._addFileChildren(
+  DineRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DineRouteRoute: DineRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
