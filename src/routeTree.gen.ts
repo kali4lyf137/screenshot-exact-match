@@ -11,8 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DineRouteRouteImport } from './routes/dine/route'
+import { Route as StaffRouteImport } from './routes/staff'
 import { Route as DineIndexRouteImport } from './routes/dine/index'
+import { Route as DineBasketRouteImport } from './routes/dine/basket'
+import { Route as DineSettingsRouteImport } from './routes/dine/settings'
 import { Route as DineMenuIndexRouteImport } from './routes/dine/menu/index'
+import { Route as DineMenuItemIdRouteImport } from './routes/dine/menu/$itemId'
+import { Route as DineOrdersIndexRouteImport } from './routes/dine/orders/index'
+import { Route as DineOrdersOrderIdRouteImport } from './routes/dine/orders/$orderId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -24,9 +30,24 @@ const DineRouteRoute = DineRouteRouteImport.update({
   path: '/dine',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StaffRoute = StaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DineIndexRoute = DineIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => DineRouteRoute,
+} as any)
+const DineBasketRoute = DineBasketRouteImport.update({
+  id: '/basket',
+  path: '/basket',
+  getParentRoute: () => DineRouteRoute,
+} as any)
+const DineSettingsRoute = DineSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => DineRouteRoute,
 } as any)
 const DineMenuIndexRoute = DineMenuIndexRouteImport.update({
@@ -34,36 +55,100 @@ const DineMenuIndexRoute = DineMenuIndexRouteImport.update({
   path: '/menu/',
   getParentRoute: () => DineRouteRoute,
 } as any)
+const DineMenuItemIdRoute = DineMenuItemIdRouteImport.update({
+  id: '/menu/$itemId',
+  path: '/menu/$itemId',
+  getParentRoute: () => DineRouteRoute,
+} as any)
+const DineOrdersIndexRoute = DineOrdersIndexRouteImport.update({
+  id: '/orders/',
+  path: '/orders/',
+  getParentRoute: () => DineRouteRoute,
+} as any)
+const DineOrdersOrderIdRoute = DineOrdersOrderIdRouteImport.update({
+  id: '/orders/$orderId',
+  path: '/orders/$orderId',
+  getParentRoute: () => DineRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dine': typeof DineRouteRouteWithChildren
+  '/staff': typeof StaffRoute
+  '/dine/basket': typeof DineBasketRoute
+  '/dine/settings': typeof DineSettingsRoute
   '/dine/': typeof DineIndexRoute
+  '/dine/menu/$itemId': typeof DineMenuItemIdRoute
+  '/dine/orders/$orderId': typeof DineOrdersOrderIdRoute
   '/dine/menu/': typeof DineMenuIndexRoute
+  '/dine/orders/': typeof DineOrdersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/staff': typeof StaffRoute
+  '/dine/basket': typeof DineBasketRoute
+  '/dine/settings': typeof DineSettingsRoute
   '/dine': typeof DineIndexRoute
+  '/dine/menu/$itemId': typeof DineMenuItemIdRoute
+  '/dine/orders/$orderId': typeof DineOrdersOrderIdRoute
   '/dine/menu': typeof DineMenuIndexRoute
+  '/dine/orders': typeof DineOrdersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dine': typeof DineRouteRouteWithChildren
+  '/staff': typeof StaffRoute
+  '/dine/basket': typeof DineBasketRoute
+  '/dine/settings': typeof DineSettingsRoute
   '/dine/': typeof DineIndexRoute
+  '/dine/menu/$itemId': typeof DineMenuItemIdRoute
+  '/dine/orders/$orderId': typeof DineOrdersOrderIdRoute
   '/dine/menu/': typeof DineMenuIndexRoute
+  '/dine/orders/': typeof DineOrdersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dine' | '/dine/' | '/dine/menu/'
+  fullPaths:
+    | '/'
+    | '/dine'
+    | '/staff'
+    | '/dine/basket'
+    | '/dine/settings'
+    | '/dine/'
+    | '/dine/menu/$itemId'
+    | '/dine/orders/$orderId'
+    | '/dine/menu/'
+    | '/dine/orders/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dine' | '/dine/menu'
-  id: '__root__' | '/' | '/dine' | '/dine/' | '/dine/menu/'
+  to:
+    | '/'
+    | '/staff'
+    | '/dine/basket'
+    | '/dine/settings'
+    | '/dine'
+    | '/dine/menu/$itemId'
+    | '/dine/orders/$orderId'
+    | '/dine/menu'
+    | '/dine/orders'
+  id:
+    | '__root__'
+    | '/'
+    | '/dine'
+    | '/staff'
+    | '/dine/basket'
+    | '/dine/settings'
+    | '/dine/'
+    | '/dine/menu/$itemId'
+    | '/dine/orders/$orderId'
+    | '/dine/menu/'
+    | '/dine/orders/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DineRouteRoute: typeof DineRouteRouteWithChildren
+  StaffRoute: typeof StaffRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,11 +167,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DineRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/staff': {
+      id: '/staff'
+      path: '/staff'
+      fullPath: '/staff'
+      preLoaderRoute: typeof StaffRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dine/': {
       id: '/dine/'
       path: '/'
       fullPath: '/dine/'
       preLoaderRoute: typeof DineIndexRouteImport
+      parentRoute: typeof DineRouteRoute
+    }
+    '/dine/basket': {
+      id: '/dine/basket'
+      path: '/basket'
+      fullPath: '/dine/basket'
+      preLoaderRoute: typeof DineBasketRouteImport
+      parentRoute: typeof DineRouteRoute
+    }
+    '/dine/settings': {
+      id: '/dine/settings'
+      path: '/settings'
+      fullPath: '/dine/settings'
+      preLoaderRoute: typeof DineSettingsRouteImport
       parentRoute: typeof DineRouteRoute
     }
     '/dine/menu/': {
@@ -96,17 +202,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DineMenuIndexRouteImport
       parentRoute: typeof DineRouteRoute
     }
+    '/dine/menu/$itemId': {
+      id: '/dine/menu/$itemId'
+      path: '/menu/$itemId'
+      fullPath: '/dine/menu/$itemId'
+      preLoaderRoute: typeof DineMenuItemIdRouteImport
+      parentRoute: typeof DineRouteRoute
+    }
+    '/dine/orders/': {
+      id: '/dine/orders/'
+      path: '/orders'
+      fullPath: '/dine/orders/'
+      preLoaderRoute: typeof DineOrdersIndexRouteImport
+      parentRoute: typeof DineRouteRoute
+    }
+    '/dine/orders/$orderId': {
+      id: '/dine/orders/$orderId'
+      path: '/orders/$orderId'
+      fullPath: '/dine/orders/$orderId'
+      preLoaderRoute: typeof DineOrdersOrderIdRouteImport
+      parentRoute: typeof DineRouteRoute
+    }
   }
 }
 
 interface DineRouteRouteChildren {
+  DineBasketRoute: typeof DineBasketRoute
+  DineSettingsRoute: typeof DineSettingsRoute
   DineIndexRoute: typeof DineIndexRoute
+  DineMenuItemIdRoute: typeof DineMenuItemIdRoute
+  DineOrdersOrderIdRoute: typeof DineOrdersOrderIdRoute
   DineMenuIndexRoute: typeof DineMenuIndexRoute
+  DineOrdersIndexRoute: typeof DineOrdersIndexRoute
 }
 
 const DineRouteRouteChildren: DineRouteRouteChildren = {
+  DineBasketRoute: DineBasketRoute,
+  DineSettingsRoute: DineSettingsRoute,
   DineIndexRoute: DineIndexRoute,
+  DineMenuItemIdRoute: DineMenuItemIdRoute,
+  DineOrdersOrderIdRoute: DineOrdersOrderIdRoute,
   DineMenuIndexRoute: DineMenuIndexRoute,
+  DineOrdersIndexRoute: DineOrdersIndexRoute,
 }
 
 const DineRouteRouteWithChildren = DineRouteRoute._addFileChildren(
@@ -116,6 +253,7 @@ const DineRouteRouteWithChildren = DineRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DineRouteRoute: DineRouteRouteWithChildren,
+  StaffRoute: StaffRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
